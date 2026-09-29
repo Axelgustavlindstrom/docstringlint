@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from docstringlint import scan, format_json, format_markdown, format_plain, main
+from docstringlint import scan, format_json, format_markdown, main
 
 
 def _write_tmp(content: str, suffix: str = ".py") -> Path:

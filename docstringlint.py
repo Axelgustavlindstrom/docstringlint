@@ -6,7 +6,7 @@ import ast
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Optional, TextIO
+from typing import List, Optional, TextIO
 
 
 @dataclass
@@ -135,11 +135,16 @@ def _lint_file(path: Path) -> List[Issue]:
 
 
 def _default_ignore(path: Path) -> bool:
-    return any(part.startswith(".") for part in path.parts) or path.name == "__pycache__"
+    return (
+        any(part.startswith(".") for part in path.parts) or path.name == "__pycache__"
+    )
 
 
 def scan(
-    target: str, *, rules: Optional[List[str]] = None, ignore: Optional[List[str]] = None
+    target: str,
+    *,
+    rules: Optional[List[str]] = None,
+    ignore: Optional[List[str]] = None,
 ) -> Report:
     root = Path(target).resolve()
     if not root.exists():
@@ -170,10 +175,13 @@ def scan(
 def format_plain(report: Report) -> str:
     if report.is_empty():
         return "No docstring issues found.\n"
-    return "\n".join(
-        f"{issue.path}:{issue.line}: {issue.code} {issue.message} ({issue.node})"
-        for issue in report.issues
-    ) + "\n"
+    return (
+        "\n".join(
+            f"{issue.path}:{issue.line}: {issue.code} {issue.message} ({issue.node})"
+            for issue in report.issues
+        )
+        + "\n"
+    )
 
 
 def format_markdown(report: Report) -> str:
@@ -209,14 +217,23 @@ def main(argv: Optional[List[str]] = None, stdout: Optional[TextIO] = None) -> i
     if stdout is None:
         stdout = sys.stdout
 
-    parser = argparse.ArgumentParser(prog="docstringlint", description="Lint Python docstrings")
+    parser = argparse.ArgumentParser(
+        prog="docstringlint", description="Lint Python docstrings"
+    )
     parser.add_argument("target", help="Python file or directory to scan")
     parser.add_argument(
-        "--format", choices=("plain", "markdown", "json"), default="plain", help="Output format"
+        "--format",
+        choices=("plain", "markdown", "json"),
+        default="plain",
+        help="Output format",
     )
     parser.add_argument("--rule", action="append", help="Limit to specific rule code")
-    parser.add_argument("--ignore", action="append", help="Ignore paths containing this segment")
-    parser.add_argument("--check", action="store_true", help="Exit with 1 when issues are found")
+    parser.add_argument(
+        "--ignore", action="append", help="Ignore paths containing this segment"
+    )
+    parser.add_argument(
+        "--check", action="store_true", help="Exit with 1 when issues are found"
+    )
     args = parser.parse_args(argv)
 
     try:

@@ -9,7 +9,7 @@ description = "Audit Python files for missing or empty docstrings."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-authors = [{ name = "ProjectCreationAgent" }]
+authors = [{ name = "Axel Gustav Lindström", email = "292675736+Axelgustavlindstrom@users.noreply.github.com" }]
 keywords = ["docstring", "lint", "cli", "python", "static-analysis"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -23,7 +23,7 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest"]
+dev = ["pytest", "ruff"]
 
 [project.scripts]
 docstringlint = "docstringlint:main"
@@ -33,3 +33,6 @@ py-modules = ["docstringlint"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff]
+exclude = [".github"]
